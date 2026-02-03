@@ -1,0 +1,19 @@
+{
+  "name": "aws-cloud-club-pup-san-juan",
+  "version": "1.0.0",
+  "description": "AWS Student Cloud Club PUP San Juan Website",
+  "main": "server/index.js",
+  "scripts": {
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "cd server && npm run dev",
+    "client": "cd client && npm run dev",
+    "build": "cd client && npm run build",
+    "start": "cd server && npm start"
+  },
+  "keywords": ["aws", "cloud", "club", "pup", "san-juan", "react", "node", "postgresql"],
+  "author": "AWS Student Cloud Club PUP San Juan",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
