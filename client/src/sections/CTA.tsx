@@ -24,15 +24,16 @@ export default function CTA({ onNavigate }: { onNavigate: NavigateFn }) {
               Weekly labs, study jams, and demos. Save your slot or browse what’s coming next.
             </p>
             <div className="flex flex-wrap gap-3">
-              <motion.button
-                type="button"
+              <motion.a
+                href="https://docs.google.com/forms/d/e/1FAIpQLScUEudEzzYlhWZ60GPHHujePvMQLqlpSe0S1hyJqdaPLwzoxA/viewform?pli=1"
+                target="_blank"
+                rel="noreferrer"
                 whileHover={{ y: -2, scale: 1.02 }}
                 whileTap={{ scale: 0.985 }}
-                onClick={() => onNavigate('contact')}
                 className="inline-flex items-center gap-2 px-5 py-3 rounded-full bg-white text-slate-900 font-semibold shadow-soft"
               >
                 Join the club <ArrowRight className="h-4 w-4" />
-              </motion.button>
+              </motion.a>
               <motion.button
                 type="button"
                 whileHover={{ y: -2, scale: 1.02 }}

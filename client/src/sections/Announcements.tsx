@@ -9,7 +9,7 @@ export default function Announcements({ announcements }: { announcements: Announ
       <SectionHeader
         eyebrow="Announcements"
         title="Club news & opportunities"
-        subtitle="Stay updated with resources, credits, and partner events."
+        subtitle="From club updates to other cloud tech events you shouldn’t miss."
       />
       <div className="grid md:grid-cols-3 gap-6">
         {announcements.map((item, i) => (

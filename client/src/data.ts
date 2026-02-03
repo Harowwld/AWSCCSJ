@@ -88,7 +88,7 @@ export const members: Member[] = [
     name: 'Jane Smith',
     role: 'Vice President',
     bio: 'Runs events and DevOps workshops on CI/CD, containers, and observability.',
-    avatar: 'https://images.unsplash.com/photo-1544723795-3fb0f9ae6f48?auto=format&fit=crop&w=400&q=80',
+    avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=400&q=80',
     socials: {
       github: 'https://github.com/janesmith',
       linkedin: 'https://linkedin.com/in/janesmith',
