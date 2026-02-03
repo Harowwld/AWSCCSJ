@@ -13,7 +13,7 @@ export default function Navbar({ onNavigate, activeId }: { onNavigate: NavigateF
   ];
 
   return (
-    <header className="sticky top-0 inset-x-0 z-40 w-full backdrop-blur bg-slate-950/70 border-b border-white/5 shadow-[0_12px_40px_-24px_rgba(0,0,0,0.6)]">
+    <header className="fixed top-0 inset-x-0 z-[999] w-full backdrop-blur bg-slate-950/80 border-b border-white/5 shadow-[0_12px_40px_-24px_rgba(0,0,0,0.6)]">
       <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-orange-400 to-amber-600 flex items-center justify-center shadow-lg shadow-orange-500/30">

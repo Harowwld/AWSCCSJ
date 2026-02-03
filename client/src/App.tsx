@@ -148,7 +148,7 @@ export default function App() {
   }, [scrollToSection]);
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-50 bg-glow-animated flex flex-col">
+    <div className="relative isolate min-h-screen bg-slate-950 text-slate-50 bg-glow-animated flex flex-col pt-20 md:pt-24">
       <Navbar onNavigate={scrollToSection} />
       <main className="flex-1">
         <Hero onNavigate={scrollToSection} />
