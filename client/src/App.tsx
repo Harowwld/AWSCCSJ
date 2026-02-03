@@ -1,4 +1,4 @@
-import { useMemo, useState, useCallback } from 'react';
+import { useMemo, useState, useCallback, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import {
   Cloud,
@@ -14,7 +14,8 @@ import {
   Sparkles,
   ExternalLink,
 } from 'lucide-react';
-import { highlights, events, members, announcements } from './data';
+import { highlights, events, members, announcements, type Event as EventItem, type Member as MemberItem, type Announcement as AnnouncementItem } from './data';
+import { supabase } from './supabaseClient';
 import './index.css';
 
 type NavigateFn = (id: string) => void;
@@ -24,6 +25,24 @@ const iconMap: Record<string, JSX.Element> = {
   Shield: <Shield className="h-6 w-6" />,
   Users: <Users className="h-6 w-6" />,
 };
+
+function formatDateLabel(dateString?: string, timeString?: string) {
+  if (!dateString) return timeString ? timeString : 'TBA';
+  const parsed = new Date(dateString);
+  if (Number.isNaN(parsed.getTime())) return dateString;
+  const options: Intl.DateTimeFormatOptions = { month: 'short', day: 'numeric', year: 'numeric' };
+  const datePart = parsed.toLocaleDateString(undefined, options);
+  const timePart = timeString ? ` — ${timeString}` : '';
+  return `${datePart}${timePart}`;
+}
+
+function formatTimestamp(timestamp?: string) {
+  if (!timestamp) return '';
+  const parsed = new Date(timestamp);
+  if (Number.isNaN(parsed.getTime())) return timestamp;
+  const options: Intl.DateTimeFormatOptions = { month: 'short', day: 'numeric', year: 'numeric' };
+  return parsed.toLocaleDateString(undefined, options);
+}
 
 function useScrollToSection(): NavigateFn {
   return useCallback((id: string) => {
@@ -256,7 +275,7 @@ function Highlights() {
   );
 }
 
-function Events() {
+function Events({ data }: { data: EventItem[] }) {
   const variants = useStagger(0.08);
   return (
     <section id="events" className="max-w-6xl mx-auto px-4 py-16 space-y-8 scroll-mt-24">
@@ -266,7 +285,7 @@ function Events() {
         subtitle="Hands-on labs, deep dives, and study groups scheduled all semester."
       />
       <div className="grid lg:grid-cols-3 gap-6">
-        {events.map((event, i) => (
+        {data.map((event, i) => (
           <motion.div
             key={event.title}
             custom={i}
@@ -353,7 +372,7 @@ function CTA({ onNavigate }: { onNavigate: NavigateFn }) {
   );
 }
 
-function Announcements({ onNavigate }: { onNavigate: NavigateFn }) {
+function Announcements({ onNavigate, announcements }: { onNavigate: NavigateFn; announcements: AnnouncementItem[] }) {
   const variants = useStagger(0.07);
   return (
     <section id="announcements" className="max-w-6xl mx-auto px-4 py-16 space-y-8 scroll-mt-24">
@@ -403,7 +422,7 @@ function Announcements({ onNavigate }: { onNavigate: NavigateFn }) {
   );
 }
 
-function Members() {
+function Members({ members }: { members: MemberItem[] }) {
   const variants = useStagger(0.07);
   return (
     <section id="members" className="max-w-6xl mx-auto px-4 py-16 space-y-8 scroll-mt-24">
@@ -462,11 +481,23 @@ function Contact() {
     e.preventDefault();
     setStatus('loading');
     try {
-      await fetch('/api/contact', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form),
-      });
+      if (!supabase) {
+        console.warn('Supabase not configured, skipping contact insert.');
+        setStatus('sent');
+        setForm({ name: '', email: '', message: '' });
+        return;
+      }
+
+      const { error } = await supabase.from('contact_messages').insert([
+        { name: form.name, email: form.email, message: form.message },
+      ]);
+
+      if (error) {
+        console.error(error);
+        setStatus('error');
+        return;
+      }
+
       setStatus('sent');
       setForm({ name: '', email: '', message: '' });
     } catch (err) {
@@ -570,17 +601,109 @@ function Footer() {
 
 export default function App() {
   const scrollToSection = useScrollToSection();
+  const [eventsData, setEventsData] = useState<EventItem[]>(events);
+  const [membersData, setMembersData] = useState<MemberItem[]>(members);
+  const [announcementsData, setAnnouncementsData] = useState<AnnouncementItem[]>(announcements);
+  const [dataSource, setDataSource] = useState<'supabase' | 'mock'>('mock');
+
+  useEffect(() => {
+    const loadData = async () => {
+      if (!supabase) {
+        setDataSource('mock');
+        return;
+      }
+
+      try {
+        const [eventsRes, membersRes, announcementsRes] = await Promise.all([
+          supabase.from('events').select('*').order('event_date', { ascending: false }),
+          supabase.from('members').select('*').order('name', { ascending: true }),
+          supabase.from('announcements').select('*').order('created_at', { ascending: false }),
+        ]);
+
+        let usedMock = false;
+
+        if (!eventsRes.error && eventsRes.data) {
+          const mapped = eventsRes.data.map((row: any) => ({
+            title: row.title ?? 'Untitled event',
+            description: row.description ?? '',
+            date: formatDateLabel(row.event_date ?? row.date, row.event_time ?? row.time),
+            location: row.location ?? 'TBA',
+            tags: Array.isArray(row.tags)
+              ? row.tags
+              : typeof row.tags === 'string'
+                ? row.tags.split(',').map((t: string) => t.trim()).filter(Boolean)
+                : [],
+          }));
+          setEventsData(mapped.length ? mapped : events);
+          usedMock = usedMock || mapped.length === 0;
+        } else {
+          console.warn('Using mock events due to error or empty data.', eventsRes.error);
+          setEventsData(events);
+          usedMock = true;
+        }
+
+        if (!membersRes.error && membersRes.data) {
+          const mapped = membersRes.data.map((row: any) => ({
+            name: row.name ?? 'Member',
+            role: row.role ?? 'Member',
+            bio: row.bio ?? '',
+            avatar: row.avatar ?? row.image_url ?? '',
+            socials: {
+              github: row.github_link ?? row.github ?? undefined,
+              linkedin: row.linkedin_link ?? row.linkedin ?? undefined,
+            },
+          }));
+          setMembersData(mapped.length ? mapped : members);
+          usedMock = usedMock || mapped.length === 0;
+        } else {
+          console.warn('Using mock members due to error or empty data.', membersRes.error);
+          setMembersData(members);
+          usedMock = true;
+        }
+
+        if (!announcementsRes.error && announcementsRes.data) {
+          const mapped = announcementsRes.data.map((row: any) => ({
+            title: row.title ?? 'Announcement',
+            excerpt: row.excerpt ?? row.content ?? '',
+            date: formatTimestamp(row.created_at ?? row.date) || '—',
+            author: row.author ?? 'Team',
+            image: row.image_url ?? row.image ?? undefined,
+          }));
+          setAnnouncementsData(mapped.length ? mapped : announcements);
+          usedMock = usedMock || mapped.length === 0;
+        } else {
+          console.warn('Using mock announcements due to error or empty data.', announcementsRes.error);
+          setAnnouncementsData(announcements);
+          usedMock = true;
+        }
+
+        setDataSource(usedMock ? 'mock' : 'supabase');
+      } catch (err) {
+        console.error('Supabase fetch failed, using mock data.', err);
+        setEventsData(events);
+        setMembersData(members);
+        setAnnouncementsData(announcements);
+        setDataSource('mock');
+      }
+    };
+
+    loadData();
+  }, []);
+
   return (
     <div className="min-h-screen bg-slate-950 text-slate-50">
       <Navbar onNavigate={scrollToSection} />
       <Hero onNavigate={scrollToSection} />
       <Highlights />
-      <Events />
+      <Events data={eventsData} />
       <CTA onNavigate={scrollToSection} />
-      <Announcements onNavigate={scrollToSection} />
-      <Members />
+      <Announcements onNavigate={scrollToSection} announcements={announcementsData} />
+      <Members members={membersData} />
       <Contact />
       <Footer />
+      <div className="fixed bottom-4 right-4 text-xs text-slate-400 bg-slate-900/80 border border-white/5 rounded-full px-3 py-1">
+        Data source: {dataSource}
+      </div>
     </div>
   );
 }
