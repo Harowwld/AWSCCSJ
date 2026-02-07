@@ -8,7 +8,7 @@ export default function Announcements({ announcements }: { announcements: Announ
     <section id="announcements" className="max-w-6xl mx-auto px-4 py-16 space-y-8 scroll-mt-24">
       <SectionHeader
         eyebrow="Announcements"
-        title="Club news & opportunities"
+        title="Updates from other cloud tech events"
         subtitle="From club updates to other cloud tech events you shouldn’t miss."
       />
       <div className="grid md:grid-cols-3 gap-6">

@@ -52,7 +52,7 @@ export default function CTA({ onNavigate }: { onNavigate: NavigateFn }) {
             viewport={{ amount: 0.4, once: true }}
             variants={statVariants}
           >
-            {[{ label: 'Active members', value: '120+' }, { label: 'Events this term', value: '12' }, { label: 'Cert mentors', value: '6' }, { label: 'Projects shipped', value: '9' }].map((stat, i) => (
+            {[{ label: 'Active members', value: '15' }, { label: 'Events this term', value: '2' }].map((stat, i) => (
               <motion.div
                 key={stat.label}
                 custom={i}

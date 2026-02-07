@@ -22,8 +22,24 @@ export default function EventsSection({ data }: { data: EventItem[] }) {
             viewport={{ amount: 0.3, once: true }}
             variants={variants}
             whileHover={{ y: -6, scale: 1.01, borderColor: 'rgba(251,146,60,0.25)' }}
-            className="card p-5 flex flex-col gap-4"
+            className="card overflow-hidden flex flex-col"
           >
+            {event.image && (
+              <div className="h-36 w-full overflow-hidden">
+                <img
+                  src={event.image}
+                  alt={event.title}
+                  className="h-full w-full object-cover"
+                  style={
+                    event.imageFocusX != null || event.imageFocusY != null
+                      ? { objectPosition: `${event.imageFocusX ?? 50}% ${event.imageFocusY ?? 50}%` }
+                      : undefined
+                  }
+                  loading="lazy"
+                />
+              </div>
+            )}
+            <div className="p-5 flex flex-col gap-4 flex-1">
             <div className="flex items-start justify-between gap-3">
               <div>
                 <p className="text-sm text-orange-200 font-semibold">{event.date}</p>
@@ -41,6 +57,7 @@ export default function EventsSection({ data }: { data: EventItem[] }) {
                   {tag}
                 </span>
               ))}
+            </div>
             </div>
           </motion.div>
         ))}

@@ -1,9 +1,6 @@
 import { useEffect, useState, useCallback, useRef } from 'react';
 import {
-  announcements as mockAnnouncements,
-  events as mockEvents,
   highlights as mockHighlights,
-  members as mockMembers,
   type Announcement as AnnouncementItem,
   type Event as EventItem,
   type Highlight as HighlightItem,
@@ -73,10 +70,11 @@ function useScrollToSection(): NavigateFn {
 
 export default function App() {
   const scrollToSection = useScrollToSection();
-  const [eventsData, setEventsData] = useState<EventItem[]>(mockEvents);
-  const [highlightsData] = useState<HighlightItem[]>(mockHighlights);
-  const [membersData, setMembersData] = useState<MemberItem[]>(mockMembers);
-  const [announcementsData, setAnnouncementsData] = useState<AnnouncementItem[]>(mockAnnouncements);
+  const [eventsData, setEventsData] = useState<EventItem[]>([]);
+  const [highlightsData, setHighlightsData] = useState<HighlightItem[]>(mockHighlights);
+  const [membersData, setMembersData] = useState<MemberItem[]>([]);
+  const [announcementsData, setAnnouncementsData] = useState<AnnouncementItem[]>([]);
+  const [siteSettings, setSiteSettings] = useState<Record<string, string>>({});
   const initialHash = useRef<string | null>(typeof window !== 'undefined' ? window.location.hash : null);
 
   useEffect(() => {
@@ -84,10 +82,12 @@ export default function App() {
       if (!supabase) return;
 
       try {
-        const [eventsRes, membersRes, announcementsRes] = await Promise.all([
-          supabase.from('events').select('*').order('event_date', { ascending: false }),
-          supabase.from('members').select('*').order('name', { ascending: true }),
+        const [eventsRes, membersRes, announcementsRes, highlightsRes, settingsRes] = await Promise.all([
+          supabase.from('events').select('*').eq('status', 'published').order('event_date', { ascending: false }),
+          supabase.from('members').select('*').eq('status', 'active').order('name', { ascending: true }),
           supabase.from('announcements').select('*').order('created_at', { ascending: false }),
+          supabase.from('highlights').select('*').eq('active', true).order('sort_order', { ascending: true }),
+          supabase.from('site_settings').select('key,value'),
         ]);
 
         if (!eventsRes.error && eventsRes.data) {
@@ -96,13 +96,16 @@ export default function App() {
             description: row.description ?? '',
             date: formatDateLabel(row.event_date ?? row.date, row.event_time ?? row.time),
             location: row.location ?? 'TBA',
+            image: row.image_url ?? row.image ?? undefined,
+            imageFocusX: typeof row.image_focus_x === 'number' ? row.image_focus_x : undefined,
+            imageFocusY: typeof row.image_focus_y === 'number' ? row.image_focus_y : undefined,
             tags: Array.isArray(row.tags)
               ? row.tags
               : typeof row.tags === 'string'
                 ? row.tags.split(',').map((t: string) => t.trim()).filter(Boolean)
                 : [],
           }));
-          setEventsData(mapped.length ? mapped : mockEvents);
+          setEventsData(mapped);
         }
 
         if (!membersRes.error && membersRes.data) {
@@ -111,12 +114,14 @@ export default function App() {
             role: row.role ?? 'Member',
             bio: row.bio ?? '',
             avatar: row.avatar ?? row.image_url ?? '',
+            avatarFocusX: typeof row.avatar_focus_x === 'number' ? row.avatar_focus_x : undefined,
+            avatarFocusY: typeof row.avatar_focus_y === 'number' ? row.avatar_focus_y : undefined,
             socials: {
               github: row.github_link ?? row.github ?? undefined,
               linkedin: row.linkedin_link ?? row.linkedin ?? undefined,
             },
           }));
-          setMembersData(mapped.length ? mapped : mockMembers);
+          setMembersData(mapped);
         }
 
         if (!announcementsRes.error && announcementsRes.data) {
@@ -126,14 +131,33 @@ export default function App() {
             date: formatTimestamp(row.created_at ?? row.date) || '—',
             author: row.author ?? 'Team',
             image: row.image_url ?? row.image ?? undefined,
+            imageFocusX: typeof row.image_focus_x === 'number' ? row.image_focus_x : undefined,
+            imageFocusY: typeof row.image_focus_y === 'number' ? row.image_focus_y : undefined,
           }));
-          setAnnouncementsData(mapped.length ? mapped : mockAnnouncements);
+          setAnnouncementsData(mapped);
+        }
+
+        if (!highlightsRes.error && highlightsRes.data) {
+          const mapped = highlightsRes.data.map((row: any) => ({
+            title: row.title ?? 'Highlight',
+            description: row.description ?? '',
+            icon: row.icon ?? 'Sparkles',
+          }));
+          if (mapped.length) setHighlightsData(mapped);
+        }
+
+        if (!settingsRes.error && settingsRes.data) {
+          const next: Record<string, string> = {};
+          for (const row of settingsRes.data as any[]) {
+            if (row?.key && typeof row.value === 'string') next[row.key] = row.value;
+          }
+          setSiteSettings(next);
         }
       } catch (err) {
-        console.error('Supabase fetch failed, using mock data.', err);
-        setEventsData(mockEvents);
-        setMembersData(mockMembers);
-        setAnnouncementsData(mockAnnouncements);
+        console.error('Supabase fetch failed.', err);
+        setEventsData([]);
+        setMembersData([]);
+        setAnnouncementsData([]);
       }
     };
 
@@ -151,15 +175,26 @@ export default function App() {
     <div className="relative isolate min-h-screen bg-slate-950 text-slate-50 bg-glow-animated flex flex-col pt-20 md:pt-24">
       <Navbar onNavigate={scrollToSection} />
       <main className="flex-1">
-        <Hero onNavigate={scrollToSection} />
+        <Hero
+          onNavigate={scrollToSection}
+          eyebrow={siteSettings.hero_eyebrow}
+          title={siteSettings.hero_title}
+          subtitle={siteSettings.hero_subtitle}
+        />
         <Highlights items={highlightsData} />
         <EventsSection data={eventsData} />
         <CTA onNavigate={scrollToSection} />
         <Announcements announcements={announcementsData} />
         <Members members={membersData} />
-        <Contact />
+        <Contact
+          meetupLocation={siteSettings.contact_meetup_location}
+          meetupSchedule={siteSettings.contact_meetup_schedule}
+          contactEmail={siteSettings.contact_email}
+          githubUrl={siteSettings.contact_github_url}
+          linkedinUrl={siteSettings.contact_linkedin_url}
+        />
       </main>
-      <Footer onNavigate={scrollToSection} />
+      <Footer onNavigate={scrollToSection} brandText={siteSettings.footer_brand_text} />
     </div>
   );
 }

@@ -1,2 +1,4 @@
 node_modules/
 PROJECT_SUMMARY.md
+.env.local
+client/.env.local

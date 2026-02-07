@@ -1,14 +1,33 @@
 import { useState } from 'react';
+import type { FormEvent } from 'react';
 import { motion } from 'framer-motion';
 import { Calendar, Github, Linkedin, Mail, MapPin } from 'lucide-react';
 import { supabase } from '../supabaseClient';
 import { SectionHeader } from './shared';
 
-export default function Contact() {
+export default function Contact({
+  meetupLocation,
+  meetupSchedule,
+  contactEmail,
+  githubUrl,
+  linkedinUrl,
+}: {
+  meetupLocation?: string;
+  meetupSchedule?: string;
+  contactEmail?: string;
+  githubUrl?: string;
+  linkedinUrl?: string;
+}) {
   const [status, setStatus] = useState<'idle' | 'loading' | 'sent' | 'error'>('idle');
   const [form, setForm] = useState({ name: '', email: '', message: '' });
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const locationLabel = meetupLocation ?? 'PUP San Juan IT Building, Room 301';
+  const scheduleLabel = meetupSchedule ?? 'Fridays, 5:00 PM';
+  const emailLabel = contactEmail ?? 'awscloudclub.pupsj@gmail.com';
+  const githubHref = githubUrl ?? 'https://github.com';
+  const linkedinHref = linkedinUrl ?? 'https://linkedin.com';
+
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setStatus('loading');
     try {
@@ -55,20 +74,30 @@ export default function Contact() {
           <h3 className="text-xl font-semibold text-white">Visit our next meetup</h3>
           <div className="space-y-2 text-sm text-slate-300">
             <div className="flex items-center gap-2">
-              <MapPin className="h-4 w-4 text-orange-300" /> PUP San Juan IT Building, Room 301
+              <MapPin className="h-4 w-4 text-orange-300" /> {locationLabel}
             </div>
             <div className="flex items-center gap-2">
-              <Calendar className="h-4 w-4 text-orange-300" /> Fridays, 5:00 PM
+              <Calendar className="h-4 w-4 text-orange-300" /> {scheduleLabel}
             </div>
             <div className="flex items-center gap-2">
-              <Mail className="h-4 w-4 text-orange-300" /> awscloudclub.pupsj@gmail.com
+              <Mail className="h-4 w-4 text-orange-300" /> {emailLabel}
             </div>
           </div>
           <div className="flex gap-3 pt-2">
-            <a href="https://github.com" className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/10 hover:border-orange-300/40">
+            <a
+              href={githubHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/10 hover:border-orange-300/40"
+            >
               <Github className="h-4 w-4" /> GitHub
             </a>
-            <a href="https://linkedin.com" className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/10 hover:border-orange-300/40">
+            <a
+              href={linkedinHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/10 hover:border-orange-300/40"
+            >
               <Linkedin className="h-4 w-4" /> LinkedIn
             </a>
           </div>

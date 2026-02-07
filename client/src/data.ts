@@ -10,6 +10,9 @@ export type Event = {
   date: string;
   location: string;
   tags: string[];
+  image?: string;
+  imageFocusX?: number;
+  imageFocusY?: number;
 };
 
 export type Member = {
@@ -17,6 +20,8 @@ export type Member = {
   role: string;
   bio: string;
   avatar: string;
+  avatarFocusX?: number;
+  avatarFocusY?: number;
   socials: {
     github?: string;
     linkedin?: string;
@@ -29,6 +34,8 @@ export type Announcement = {
   date: string;
   author: string;
   image?: string;
+  imageFocusX?: number;
+  imageFocusY?: number;
 };
 
 export const highlights: Highlight[] = [

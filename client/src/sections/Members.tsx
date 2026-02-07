@@ -28,6 +28,13 @@ export default function Members({ members }: { members: MemberItem[] }) {
               src={member.avatar}
               alt={member.name}
               className="w-full h-40 object-cover rounded-xl border border-white/5"
+              style={
+                member.avatarFocusX != null || member.avatarFocusY != null
+                  ? {
+                      objectPosition: `${member.avatarFocusX ?? 50}% ${member.avatarFocusY ?? 50}%`,
+                    }
+                  : undefined
+              }
               loading="lazy"
             />
             <div>
@@ -37,12 +44,24 @@ export default function Members({ members }: { members: MemberItem[] }) {
             </div>
             <div className="flex gap-3 text-slate-200">
               {member.socials.github && (
-                <a href={member.socials.github} className="hover:text-orange-200" aria-label="GitHub">
+                <a
+                  href={member.socials.github}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-orange-200"
+                  aria-label="GitHub"
+                >
                   <Github className="h-5 w-5" />
                 </a>
               )}
               {member.socials.linkedin && (
-                <a href={member.socials.linkedin} className="hover:text-orange-200" aria-label="LinkedIn">
+                <a
+                  href={member.socials.linkedin}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-orange-200"
+                  aria-label="LinkedIn"
+                >
                   <Linkedin className="h-5 w-5" />
                 </a>
               )}

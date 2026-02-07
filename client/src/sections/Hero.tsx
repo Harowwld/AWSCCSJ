@@ -1,12 +1,31 @@
+import type { MouseEvent } from 'react';
 import { motion } from 'framer-motion';
 import { Calendar, MapPin, Rocket, Sparkles, ArrowRight } from 'lucide-react';
 import type { NavigateFn } from './shared';
 import { Pill } from './shared';
 
-export default function Hero({ onNavigate }: { onNavigate: NavigateFn }) {
-  const go = (_e: React.MouseEvent, id: string) => {
+export default function Hero({
+  onNavigate,
+  eyebrow,
+  title,
+  subtitle,
+}: {
+  onNavigate: NavigateFn;
+  eyebrow?: string;
+  title?: string;
+  subtitle?: string;
+}) {
+  const go = (_e: MouseEvent, id: string) => {
     onNavigate(id);
   };
+
+  const heroEyebrow = eyebrow ?? 'Official AWS Student Club';
+  const heroTitle =
+    title ??
+    'Build cloud-first skills with the AWS Cloud Club of PUP San Juan.';
+  const heroSubtitle =
+    subtitle ??
+    'Hands-on labs, study jams, and projects guided by student leaders and AWS mentors. We help you launch cloud careers and certifications.';
 
   return (
     <section className="relative overflow-hidden scroll-mt-24" id="about">
@@ -23,14 +42,21 @@ export default function Hero({ onNavigate }: { onNavigate: NavigateFn }) {
           transition={{ duration: 0.7, type: 'spring', stiffness: 120, damping: 18 }}
         >
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/10 text-xs uppercase tracking-[0.24em] text-orange-100">
-            <Sparkles className="h-4 w-4" /> Official AWS Student Club
+            <Sparkles className="h-4 w-4" /> {heroEyebrow}
           </div>
           <h1 className="text-4xl md:text-5xl font-bold mt-6 leading-tight">
-            Build cloud-first skills with the <span className="text-orange-400">AWS Cloud Club</span> of PUP San Juan.
+            {heroTitle.includes('AWS Cloud Club') ? (
+              <>
+                {heroTitle.split('AWS Cloud Club')[0]}
+                <span className="text-orange-400">AWS Cloud Club</span>
+                {heroTitle.split('AWS Cloud Club').slice(1).join('AWS Cloud Club')}
+              </>
+            ) : (
+              heroTitle
+            )}
           </h1>
           <p className="text-lg text-slate-300 mt-4 max-w-xl">
-            Hands-on labs, study jams, and projects guided by student leaders and AWS mentors. We help you launch cloud careers and
-            certifications.
+            {heroSubtitle}
           </p>
           <div className="mt-8 flex flex-wrap gap-4">
             <motion.button

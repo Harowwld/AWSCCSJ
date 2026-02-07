@@ -408,12 +408,24 @@ export function Members({ members }: { members: MemberItem[] }) {
             </div>
             <div className="flex gap-3 text-slate-200">
               {member.socials.github && (
-                <a href={member.socials.github} className="hover:text-orange-200" aria-label="GitHub">
+                <a
+                  href={member.socials.github}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-orange-200"
+                  aria-label="GitHub"
+                >
                   <Github className="h-5 w-5" />
                 </a>
               )}
               {member.socials.linkedin && (
-                <a href={member.socials.linkedin} className="hover:text-orange-200" aria-label="LinkedIn">
+                <a
+                  href={member.socials.linkedin}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-orange-200"
+                  aria-label="LinkedIn"
+                >
                   <Linkedin className="h-5 w-5" />
                 </a>
               )}
@@ -486,10 +498,20 @@ export function Contact() {
             </div>
           </div>
           <div className="flex gap-3 pt-2">
-            <a href="https://github.com" className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/10 hover:border-orange-300/40">
+            <a
+              href="https://github.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/10 hover:border-orange-300/40"
+            >
               <Github className="h-4 w-4" /> GitHub
             </a>
-            <a href="https://linkedin.com" className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/10 hover:border-orange-300/40">
+            <a
+              href="https://linkedin.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/10 hover:border-orange-300/40"
+            >
               <Linkedin className="h-4 w-4" /> LinkedIn
             </a>
           </div>

@@ -9,8 +9,21 @@
     "preview": "npm run preview --prefix client",
     "lint": "npm run lint --prefix client"
   },
-  "keywords": ["aws", "cloud", "club", "pup", "san-juan", "react", "node", "postgresql"],
+  "keywords": [
+    "aws",
+    "cloud",
+    "club",
+    "pup",
+    "san-juan",
+    "react",
+    "node",
+    "postgresql"
+  ],
   "author": "AWS Student Cloud Club PUP San Juan",
   "license": "MIT",
-  "devDependencies": {}
+  "devDependencies": {
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
+    "@testing-library/user-event": "^14.6.1"
+  }
 }
