@@ -1,7 +1,4 @@
-import { getRequestUser } from './_auth.js';
-import { getSupabaseAdmin } from './_supabaseAdmin.js';
-
-const REDIRECT_TO = 'https://awsccsj.vercel.app/invite/accept';
+import { createClient } from '@supabase/supabase-js';
 
 type BasicRequest = {
   method?: string;
@@ -13,6 +10,44 @@ type BasicResponse = {
   status: (code: number) => BasicResponse;
   json: (payload: any) => void;
 };
+
+const REDIRECT_TO = 'https://awsccsj.vercel.app/invite/accept';
+
+async function getRequestUser(req: BasicRequest): Promise<{ id: string; email?: string } | null> {
+  const url = process.env.SUPABASE_URL;
+  const anon = process.env.SUPABASE_ANON_KEY;
+  if (!url || !anon) return null;
+
+  const rawHeader = req.headers.authorization;
+  const authHeader = Array.isArray(rawHeader) ? rawHeader[0] : rawHeader;
+  if (!authHeader?.toLowerCase().startsWith('bearer ')) return null;
+  const token = authHeader.slice('bearer '.length);
+
+  const supabase = createClient(url, anon, {
+    auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false },
+  });
+
+  const { data, error } = await supabase.auth.getUser(token);
+  if (error || !data.user) return null;
+
+  return { id: data.user.id, email: data.user.email ?? undefined };
+}
+
+function getSupabaseAdmin() {
+  const url = process.env.SUPABASE_URL;
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+  if (!url) throw new Error('Missing env SUPABASE_URL');
+  if (!key) throw new Error('Missing env SUPABASE_SERVICE_ROLE_KEY');
+
+  return createClient(url, key, {
+    auth: {
+      persistSession: false,
+      autoRefreshToken: false,
+      detectSessionInUrl: false,
+    },
+  });
+}
 
 export default async function handler(req: BasicRequest, res: BasicResponse) {
   if (req.method !== 'POST') {
