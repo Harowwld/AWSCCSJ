@@ -444,6 +444,8 @@ export default function AdminPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
+  const [inviteEmail, setInviteEmail] = useState('');
+
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
@@ -587,6 +589,58 @@ export default function AdminPage() {
     );
   }, [busy, tab]);
 
+  const inviteCard = useMemo(() => {
+    if (!isAdmin) return null;
+
+    return (
+      <div className="card p-5 space-y-3">
+        <h2 className="text-lg font-bold text-white">Invite admin</h2>
+        <p className="text-sm text-slate-300">Send an email invite. The user will be promoted to admin after they accept and sign in.</p>
+
+        <div className="grid md:grid-cols-[1fr_auto] gap-3 items-end">
+          <TextInput label="Email" value={inviteEmail} onChange={setInviteEmail} type="email" placeholder="name@domain.com" />
+          <PrimaryButton
+            disabled={busy || !inviteEmail.trim()}
+            onClick={async () => {
+              if (!supabase) return;
+              setBusy(true);
+              setError(null);
+              setNotice(null);
+
+              try {
+                const { data: sessRes, error: sessErr } = await supabase.auth.getSession();
+                if (sessErr) throw sessErr;
+                const token = sessRes.session?.access_token;
+                if (!token) throw new Error('Not signed in');
+
+                const res = await fetch('/api/invite-admin', {
+                  method: 'POST',
+                  headers: {
+                    'content-type': 'application/json',
+                    authorization: `Bearer ${token}`,
+                  },
+                  body: JSON.stringify({ email: inviteEmail.trim() }),
+                });
+
+                const json = await res.json().catch(() => ({}));
+                if (!res.ok) throw new Error(json?.error ?? 'Invite failed');
+
+                setInviteEmail('');
+                setNotice(`Invite sent to ${json.invitedEmail ?? inviteEmail.trim()}`);
+              } catch (e: any) {
+                setError(e?.message ?? 'Invite failed');
+              } finally {
+                setBusy(false);
+              }
+            }}
+          >
+            Send invite
+          </PrimaryButton>
+        </div>
+      </div>
+    );
+  }, [busy, inviteEmail, isAdmin]);
+
   const banner = (
     <div className="space-y-2">
       {error && <div className="card p-3 border border-red-500/30 bg-red-500/10 text-red-100">{error}</div>}
@@ -684,6 +738,7 @@ export default function AdminPage() {
       <div className="max-w-6xl mx-auto space-y-6">
         {header}
         {banner}
+        {inviteCard}
 
         {tab === 'announcements' && (
           <AnnouncementsAdmin
@@ -768,6 +823,19 @@ function SiteSettingsAdmin({
   const [heroEyebrow, setHeroEyebrow] = useState('');
   const [heroTitle, setHeroTitle] = useState('');
   const [heroSubtitle, setHeroSubtitle] = useState('');
+  const [heroStat1Value, setHeroStat1Value] = useState('');
+  const [heroStat1Label, setHeroStat1Label] = useState('');
+  const [heroStat2Value, setHeroStat2Value] = useState('');
+  const [heroStat2Label, setHeroStat2Label] = useState('');
+  const [heroStat3Value, setHeroStat3Value] = useState('');
+  const [heroStat3Label, setHeroStat3Label] = useState('');
+  const [heroWorkshopLabel, setHeroWorkshopLabel] = useState('');
+  const [heroWorkshopTitle, setHeroWorkshopTitle] = useState('');
+  const [heroWorkshopPill, setHeroWorkshopPill] = useState('');
+  const [heroWorkshopDescription, setHeroWorkshopDescription] = useState('');
+  const [heroWorkshopDatetime, setHeroWorkshopDatetime] = useState('');
+  const [heroWorkshopLocation, setHeroWorkshopLocation] = useState('');
+  const [heroWorkshopCta, setHeroWorkshopCta] = useState('');
   const [contactMeetupLocation, setContactMeetupLocation] = useState('');
   const [contactMeetupSchedule, setContactMeetupSchedule] = useState('');
   const [contactEmail, setContactEmail] = useState('');
@@ -779,6 +847,19 @@ function SiteSettingsAdmin({
     setHeroEyebrow(getSetting(settings, 'hero_eyebrow'));
     setHeroTitle(getSetting(settings, 'hero_title'));
     setHeroSubtitle(getSetting(settings, 'hero_subtitle'));
+    setHeroStat1Value(getSetting(settings, 'hero_stat1_value'));
+    setHeroStat1Label(getSetting(settings, 'hero_stat1_label'));
+    setHeroStat2Value(getSetting(settings, 'hero_stat2_value'));
+    setHeroStat2Label(getSetting(settings, 'hero_stat2_label'));
+    setHeroStat3Value(getSetting(settings, 'hero_stat3_value'));
+    setHeroStat3Label(getSetting(settings, 'hero_stat3_label'));
+    setHeroWorkshopLabel(getSetting(settings, 'hero_workshop_label'));
+    setHeroWorkshopTitle(getSetting(settings, 'hero_workshop_title'));
+    setHeroWorkshopPill(getSetting(settings, 'hero_workshop_pill'));
+    setHeroWorkshopDescription(getSetting(settings, 'hero_workshop_description'));
+    setHeroWorkshopDatetime(getSetting(settings, 'hero_workshop_datetime'));
+    setHeroWorkshopLocation(getSetting(settings, 'hero_workshop_location'));
+    setHeroWorkshopCta(getSetting(settings, 'hero_workshop_cta'));
     setContactMeetupLocation(getSetting(settings, 'contact_meetup_location'));
     setContactMeetupSchedule(getSetting(settings, 'contact_meetup_schedule'));
     setContactEmail(getSetting(settings, 'contact_email'));
@@ -797,6 +878,19 @@ function SiteSettingsAdmin({
         { key: 'hero_eyebrow', value: heroEyebrow },
         { key: 'hero_title', value: heroTitle },
         { key: 'hero_subtitle', value: heroSubtitle },
+        { key: 'hero_stat1_value', value: heroStat1Value },
+        { key: 'hero_stat1_label', value: heroStat1Label },
+        { key: 'hero_stat2_value', value: heroStat2Value },
+        { key: 'hero_stat2_label', value: heroStat2Label },
+        { key: 'hero_stat3_value', value: heroStat3Value },
+        { key: 'hero_stat3_label', value: heroStat3Label },
+        { key: 'hero_workshop_label', value: heroWorkshopLabel },
+        { key: 'hero_workshop_title', value: heroWorkshopTitle },
+        { key: 'hero_workshop_pill', value: heroWorkshopPill },
+        { key: 'hero_workshop_description', value: heroWorkshopDescription },
+        { key: 'hero_workshop_datetime', value: heroWorkshopDatetime },
+        { key: 'hero_workshop_location', value: heroWorkshopLocation },
+        { key: 'hero_workshop_cta', value: heroWorkshopCta },
         { key: 'contact_meetup_location', value: contactMeetupLocation },
         { key: 'contact_meetup_schedule', value: contactMeetupSchedule },
         { key: 'contact_email', value: contactEmail },
@@ -823,6 +917,24 @@ function SiteSettingsAdmin({
         <TextInput label="Hero eyebrow" value={heroEyebrow} onChange={setHeroEyebrow} placeholder="Official AWS Student Club" />
         <TextInput label="Hero title" value={heroTitle} onChange={setHeroTitle} placeholder="Build cloud-first skills..." />
         <TextArea label="Hero subtitle" value={heroSubtitle} onChange={setHeroSubtitle} placeholder="Hands-on labs, study jams..." />
+        <TextInput label="Hero stat 1 value" value={heroStat1Value} onChange={setHeroStat1Value} placeholder="120+" />
+        <TextInput label="Hero stat 1 label" value={heroStat1Label} onChange={setHeroStat1Label} placeholder="Members" />
+        <TextInput label="Hero stat 2 value" value={heroStat2Value} onChange={setHeroStat2Value} placeholder="12" />
+        <TextInput label="Hero stat 2 label" value={heroStat2Label} onChange={setHeroStat2Label} placeholder="Events / sem" />
+        <TextInput label="Hero stat 3 value" value={heroStat3Value} onChange={setHeroStat3Value} placeholder="6" />
+        <TextInput label="Hero stat 3 label" value={heroStat3Label} onChange={setHeroStat3Label} placeholder="Cert mentors" />
+        <TextInput label="Hero workshop label" value={heroWorkshopLabel} onChange={setHeroWorkshopLabel} placeholder="Next Workshop" />
+        <TextInput label="Hero workshop title" value={heroWorkshopTitle} onChange={setHeroWorkshopTitle} placeholder="AWS Cloud Essentials" />
+        <TextInput label="Hero workshop pill" value={heroWorkshopPill} onChange={setHeroWorkshopPill} placeholder="Feb 15" />
+        <TextArea
+          label="Hero workshop description"
+          value={heroWorkshopDescription}
+          onChange={setHeroWorkshopDescription}
+          placeholder="Launch EC2, host static sites..."
+        />
+        <TextInput label="Hero workshop datetime" value={heroWorkshopDatetime} onChange={setHeroWorkshopDatetime} placeholder="Feb 15, 2:00 PM" />
+        <TextInput label="Hero workshop location" value={heroWorkshopLocation} onChange={setHeroWorkshopLocation} placeholder="IT Building 301" />
+        <TextInput label="Hero workshop CTA" value={heroWorkshopCta} onChange={setHeroWorkshopCta} placeholder="Save my slot" />
         <TextInput label="Meetup location" value={contactMeetupLocation} onChange={setContactMeetupLocation} placeholder="PUP San Juan..." />
         <TextInput label="Meetup schedule" value={contactMeetupSchedule} onChange={setContactMeetupSchedule} placeholder="Fridays, 5:00 PM" />
         <TextInput label="Contact email" value={contactEmail} onChange={setContactEmail} placeholder="awscloudclub@..." />
@@ -844,6 +956,10 @@ function SiteSettingsAdmin({
         <h3 className="text-white font-semibold">Keys</h3>
         <p className="text-sm text-slate-300 mt-2">
           hero_eyebrow, hero_title, hero_subtitle
+          <br />
+          hero_stat1_value, hero_stat1_label, hero_stat2_value, hero_stat2_label, hero_stat3_value, hero_stat3_label
+          <br />
+          hero_workshop_label, hero_workshop_title, hero_workshop_pill, hero_workshop_description, hero_workshop_datetime, hero_workshop_location, hero_workshop_cta
           <br />
           contact_meetup_location, contact_meetup_schedule, contact_email
           <br />

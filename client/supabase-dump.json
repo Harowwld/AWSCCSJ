@@ -1,0 +1,221 @@
+{
+  "generatedAt": "2026-02-15T03:41:34.484Z",
+  "mode": "dump",
+  "tables": {
+    "admins": [],
+    "announcements": [],
+    "contact_messages": [],
+    "events": [],
+    "highlights": [],
+    "members": [
+      {
+        "id": "b29452a3-d635-4618-99e3-4062ce9a7052",
+        "name": "Cydoel M. Tomas",
+        "role": "Executive Director",
+        "bio": " ",
+        "avatar": "https://folpjzyplpbjowvzsbcj.supabase.co/storage/v1/object/public/public-images/members/daf56a9f-df87-4e10-9e6b-4c7e577d33c1-Tomas__Cydoel_M..JPG",
+        "image_url": null,
+        "github": null,
+        "github_link": null,
+        "linkedin": null,
+        "linkedin_link": null,
+        "created_at": "2026-02-07T08:18:04.622279+00:00",
+        "status": "active",
+        "avatar_focus_x": 50,
+        "avatar_focus_y": 23
+      },
+      {
+        "id": "abc41567-a42a-4807-b7f2-9661de5160ed",
+        "name": "Borgy Misael K. Palermo",
+        "role": "Executive Secretary",
+        "bio": " ",
+        "avatar": "https://folpjzyplpbjowvzsbcj.supabase.co/storage/v1/object/public/public-images/members/f4e08b11-84d1-43e6-a786-a2982d81353b-SCS04263.JPG",
+        "image_url": null,
+        "github": null,
+        "github_link": null,
+        "linkedin": null,
+        "linkedin_link": null,
+        "created_at": "2026-02-07T08:20:20.58295+00:00",
+        "status": "active",
+        "avatar_focus_x": 50,
+        "avatar_focus_y": 24
+      },
+      {
+        "id": "ccd300cd-9bc4-49f5-8973-c114f851740b",
+        "name": "Harold Prince E. dela Pena",
+        "role": "Technology Director",
+        "bio": " ",
+        "avatar": "https://folpjzyplpbjowvzsbcj.supabase.co/storage/v1/object/public/public-images/members/575a08bf-b46f-4e08-973c-93990d139215-fdeed1eb-f7f7-48b0-83bd-359551a572d9.jpg",
+        "image_url": null,
+        "github": null,
+        "github_link": null,
+        "linkedin": null,
+        "linkedin_link": null,
+        "created_at": "2026-02-07T08:21:59.123514+00:00",
+        "status": "active",
+        "avatar_focus_x": 50,
+        "avatar_focus_y": 15
+      },
+      {
+        "id": "9fedd1e7-2cef-473f-8e2b-fd04019858c7",
+        "name": "Marc Genesis  L. Regis",
+        "role": "Creatives Director",
+        "bio": " ",
+        "avatar": "https://folpjzyplpbjowvzsbcj.supabase.co/storage/v1/object/public/public-images/members/e1ba7245-2daa-46b4-8fbf-b25e5980f879-REGIS-FORMAL-PIC-2X2.jpg",
+        "image_url": null,
+        "github": null,
+        "github_link": null,
+        "linkedin": null,
+        "linkedin_link": null,
+        "created_at": "2026-02-07T08:23:41.870331+00:00",
+        "status": "active",
+        "avatar_focus_x": 50,
+        "avatar_focus_y": 39
+      },
+      {
+        "id": "4df3ebb0-a361-49a1-9996-0d45fb2e9d8e",
+        "name": "Paulo D. Masculino",
+        "role": "Creatives Associate Director",
+        "bio": "  ",
+        "avatar": "https://folpjzyplpbjowvzsbcj.supabase.co/storage/v1/object/public/public-images/members/339d77ab-7527-416a-91a9-b22970ab6887-Masculino__Paulo_D..jpg",
+        "image_url": null,
+        "github": null,
+        "github_link": null,
+        "linkedin": null,
+        "linkedin_link": null,
+        "created_at": "2026-02-07T08:24:20.430095+00:00",
+        "status": "active",
+        "avatar_focus_x": 50,
+        "avatar_focus_y": 32
+      },
+      {
+        "id": "e9af8119-a2af-40fa-a01e-5a4b9b05d3f2",
+        "name": "Cedrick Joseph H. Mariano",
+        "role": "Creatives Associate Director",
+        "bio": "  ",
+        "avatar": "https://folpjzyplpbjowvzsbcj.supabase.co/storage/v1/object/public/public-images/members/d438d673-0184-41a1-a4b3-72742f5092e8-Mariano__Cedrick_Joseph_H..JPG",
+        "image_url": null,
+        "github": null,
+        "github_link": null,
+        "linkedin": null,
+        "linkedin_link": null,
+        "created_at": "2026-02-07T08:25:02.149306+00:00",
+        "status": "active",
+        "avatar_focus_x": 57,
+        "avatar_focus_y": 31
+      }
+    ],
+    "site_settings": [
+      {
+        "key": "hero_eyebrow",
+        "value": "",
+        "updated_at": "2026-02-08T08:12:24.350946+00:00"
+      },
+      {
+        "key": "hero_title",
+        "value": "",
+        "updated_at": "2026-02-08T08:12:24.350946+00:00"
+      },
+      {
+        "key": "hero_subtitle",
+        "value": "",
+        "updated_at": "2026-02-08T08:12:24.350946+00:00"
+      },
+      {
+        "key": "hero_stat1_value",
+        "value": "12",
+        "updated_at": "2026-02-08T08:12:24.350946+00:00"
+      },
+      {
+        "key": "hero_stat1_label",
+        "value": "",
+        "updated_at": "2026-02-08T08:12:24.350946+00:00"
+      },
+      {
+        "key": "hero_stat2_value",
+        "value": "2",
+        "updated_at": "2026-02-08T08:12:24.350946+00:00"
+      },
+      {
+        "key": "hero_stat2_label",
+        "value": "",
+        "updated_at": "2026-02-08T08:12:24.350946+00:00"
+      },
+      {
+        "key": "hero_stat3_value",
+        "value": "",
+        "updated_at": "2026-02-08T08:12:24.350946+00:00"
+      },
+      {
+        "key": "hero_stat3_label",
+        "value": "",
+        "updated_at": "2026-02-08T08:12:24.350946+00:00"
+      },
+      {
+        "key": "hero_workshop_label",
+        "value": "",
+        "updated_at": "2026-02-08T08:12:24.350946+00:00"
+      },
+      {
+        "key": "hero_workshop_title",
+        "value": "",
+        "updated_at": "2026-02-08T08:12:24.350946+00:00"
+      },
+      {
+        "key": "hero_workshop_pill",
+        "value": "",
+        "updated_at": "2026-02-08T08:12:24.350946+00:00"
+      },
+      {
+        "key": "hero_workshop_description",
+        "value": "",
+        "updated_at": "2026-02-08T08:12:24.350946+00:00"
+      },
+      {
+        "key": "hero_workshop_datetime",
+        "value": "",
+        "updated_at": "2026-02-08T08:12:24.350946+00:00"
+      },
+      {
+        "key": "hero_workshop_location",
+        "value": "",
+        "updated_at": "2026-02-08T08:12:24.350946+00:00"
+      },
+      {
+        "key": "hero_workshop_cta",
+        "value": "",
+        "updated_at": "2026-02-08T08:12:24.350946+00:00"
+      },
+      {
+        "key": "contact_meetup_location",
+        "value": "",
+        "updated_at": "2026-02-08T08:12:24.350946+00:00"
+      },
+      {
+        "key": "contact_meetup_schedule",
+        "value": "",
+        "updated_at": "2026-02-08T08:12:24.350946+00:00"
+      },
+      {
+        "key": "contact_email",
+        "value": "",
+        "updated_at": "2026-02-08T08:12:24.350946+00:00"
+      },
+      {
+        "key": "contact_github_url",
+        "value": "",
+        "updated_at": "2026-02-08T08:12:24.350946+00:00"
+      },
+      {
+        "key": "contact_linkedin_url",
+        "value": "",
+        "updated_at": "2026-02-08T08:12:24.350946+00:00"
+      },
+      {
+        "key": "footer_brand_text",
+        "value": "",
+        "updated_at": "2026-02-08T08:12:24.350946+00:00"
+      }
+    ]
+  }
+}

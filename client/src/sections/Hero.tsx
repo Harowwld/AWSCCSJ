@@ -9,23 +9,74 @@ export default function Hero({
   eyebrow,
   title,
   subtitle,
+  stat1Value,
+  stat1Label,
+  stat2Value,
+  stat2Label,
+  stat3Value,
+  stat3Label,
+  workshopLabel,
+  workshopTitle,
+  workshopPill,
+  workshopDescription,
+  workshopDateTime,
+  workshopLocation,
+  workshopCta,
 }: {
   onNavigate: NavigateFn;
   eyebrow?: string;
   title?: string;
   subtitle?: string;
+  stat1Value?: string;
+  stat1Label?: string;
+  stat2Value?: string;
+  stat2Label?: string;
+  stat3Value?: string;
+  stat3Label?: string;
+  workshopLabel?: string;
+  workshopTitle?: string;
+  workshopPill?: string;
+  workshopDescription?: string;
+  workshopDateTime?: string;
+  workshopLocation?: string;
+  workshopCta?: string;
 }) {
   const go = (_e: MouseEvent, id: string) => {
     onNavigate(id);
   };
 
-  const heroEyebrow = eyebrow ?? 'Official AWS Student Club';
+  const pick = (value: string | undefined, fallback: string) => {
+    if (typeof value !== 'string') return fallback;
+    const trimmed = value.trim();
+    return trimmed.length ? trimmed : fallback;
+  };
+
+  const heroEyebrow = pick(eyebrow, 'Official AWS Student Club');
   const heroTitle =
-    title ??
-    'Build cloud-first skills with the AWS Cloud Club of PUP San Juan.';
+    pick(title, 'Build cloud-first skills with the AWS Cloud Club of PUP San Juan.');
   const heroSubtitle =
-    subtitle ??
-    'Hands-on labs, study jams, and projects guided by student leaders and AWS mentors. We help you launch cloud careers and certifications.';
+    pick(
+      subtitle,
+      'Hands-on labs, study jams, and projects guided by student leaders and AWS mentors. We help you launch cloud careers and certifications.'
+    );
+
+  const stats = [
+    { label: pick(stat1Label, 'Members'), value: pick(stat1Value, '120+') },
+    { label: pick(stat2Label, 'Events / sem'), value: pick(stat2Value, '12') },
+    { label: pick(stat3Label, 'Cert mentors'), value: pick(stat3Value, '6') },
+  ];
+
+  const nextWorkshopLabel = pick(workshopLabel, 'Next Workshop');
+  const nextWorkshopTitle = pick(workshopTitle, 'AWS Cloud Essentials');
+  const nextWorkshopPill = pick(workshopPill, 'Feb 15');
+  const nextWorkshopDescription =
+    pick(
+      workshopDescription,
+      'Launch EC2, host static sites on S3 + CloudFront, and connect API Gateway to Lambda. Bring your laptop—we build live.'
+    );
+  const nextWorkshopDateTime = pick(workshopDateTime, 'Feb 15, 2:00 PM');
+  const nextWorkshopLocation = pick(workshopLocation, 'IT Building 301');
+  const nextWorkshopCta = pick(workshopCta, 'Save my slot');
 
   return (
     <section className="relative overflow-hidden scroll-mt-24" id="about">
@@ -79,7 +130,7 @@ export default function Hero({
             </motion.button>
           </div>
           <div className="mt-10 grid grid-cols-3 gap-4 max-w-lg text-sm text-slate-300">
-            {[{ label: 'Members', value: '120+' }, { label: 'Events / sem', value: '12' }, { label: 'Cert mentors', value: '6' }].map((stat) => (
+            {stats.map((stat) => (
               <div key={stat.label} className="rounded-2xl border border-white/5 bg-slate-900/50 px-4 py-3">
                 <p className="text-xl font-semibold text-white">{stat.value}</p>
                 <p className="text-xs uppercase tracking-wide text-slate-400">{stat.label}</p>
@@ -103,18 +154,18 @@ export default function Hero({
                   <Rocket className="h-5 w-5 text-orange-300" />
                 </div>
                 <div>
-                  <p className="text-sm text-slate-300">Next Workshop</p>
-                  <p className="text-lg font-semibold text-white">AWS Cloud Essentials</p>
+                  <p className="text-sm text-slate-300">{nextWorkshopLabel}</p>
+                  <p className="text-lg font-semibold text-white">{nextWorkshopTitle}</p>
                 </div>
               </div>
-              <Pill label="Feb 15" />
+              <Pill label={nextWorkshopPill} />
             </div>
             <p className="text-sm text-slate-300 leading-relaxed">
-              Launch EC2, host static sites on S3 + CloudFront, and connect API Gateway to Lambda. Bring your laptop—we build live.
+              {nextWorkshopDescription}
             </p>
             <div className="grid grid-cols-2 gap-3 text-sm text-slate-200">
-              <div className="flex items-center gap-2"><Calendar className="h-4 w-4 text-orange-300" /> Feb 15, 2:00 PM</div>
-              <div className="flex items-center gap-2"><MapPin className="h-4 w-4 text-orange-300" /> IT Building 301</div>
+              <div className="flex items-center gap-2"><Calendar className="h-4 w-4 text-orange-300" /> {nextWorkshopDateTime}</div>
+              <div className="flex items-center gap-2"><MapPin className="h-4 w-4 text-orange-300" /> {nextWorkshopLocation}</div>
             </div>
             <motion.button
               type="button"
@@ -123,7 +174,7 @@ export default function Hero({
               onClick={() => onNavigate('contact')}
               className="w-full mt-2 inline-flex items-center justify-center gap-2 px-4 py-3 rounded-2xl bg-orange-500 text-slate-950 font-semibold shadow-lg shadow-orange-500/30"
             >
-              Save my slot <ArrowRight className="h-4 w-4" />
+              {nextWorkshopCta} <ArrowRight className="h-4 w-4" />
             </motion.button>
           </div>
         </motion.div>

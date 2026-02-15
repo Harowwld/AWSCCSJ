@@ -180,6 +180,19 @@ export default function App() {
           eyebrow={siteSettings.hero_eyebrow}
           title={siteSettings.hero_title}
           subtitle={siteSettings.hero_subtitle}
+          stat1Value={siteSettings.hero_stat1_value}
+          stat1Label={siteSettings.hero_stat1_label}
+          stat2Value={siteSettings.hero_stat2_value}
+          stat2Label={siteSettings.hero_stat2_label}
+          stat3Value={siteSettings.hero_stat3_value}
+          stat3Label={siteSettings.hero_stat3_label}
+          workshopLabel={siteSettings.hero_workshop_label}
+          workshopTitle={siteSettings.hero_workshop_title}
+          workshopPill={siteSettings.hero_workshop_pill}
+          workshopDescription={siteSettings.hero_workshop_description}
+          workshopDateTime={siteSettings.hero_workshop_datetime}
+          workshopLocation={siteSettings.hero_workshop_location}
+          workshopCta={siteSettings.hero_workshop_cta}
         />
         <Highlights items={highlightsData} />
         <EventsSection data={eventsData} />
