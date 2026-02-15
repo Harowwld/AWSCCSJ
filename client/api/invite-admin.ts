@@ -1,5 +1,5 @@
-import { getRequestUser } from './_auth';
-import { getSupabaseAdmin } from './_supabaseAdmin';
+import { getRequestUser } from './_auth.js';
+import { getSupabaseAdmin } from './_supabaseAdmin.js';
 
 const REDIRECT_TO = 'https://awsccsj.vercel.app/invite/accept';
 

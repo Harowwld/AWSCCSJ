@@ -5,8 +5,8 @@ type BasicRequest = {
 };
 
 export async function getRequestUser(req: BasicRequest): Promise<{ id: string; email?: string } | null> {
-  const url = process.env.SUPABASE_URL;
-  const anon = process.env.SUPABASE_ANON_KEY;
+  const url = import.meta.env.VITE_SUPABASE_URL;
+  const anon = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
   if (!url || !anon) return null;
 
